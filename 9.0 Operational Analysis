@@ -1,0 +1,43 @@
+-- G.1 Profitability by Shipping Mode 
+SELECT	Ship_mode
+	  ,	SUM(Sales) AS Total_Sales
+    ,	SUM(Profit) AS Total_Profit
+    ,	ROUND( SUM(Profit) /  SUM(Sales) *100 ,2) AS Profit_Margin_Pct
+FROM superstore.superstore
+GROUP BY Ship_mode
+ORDER BY Total_Sales DESC
+
+-- G.2 Average Shipping Time 
+SELECT	Ship_mode
+	,	ROUND(AVG(DATEDIFF(Ship_date, Order_date)) ,2 ) AS Avg_Shipping_Days
+    ,	COUNT(*) AS Oders_Count
+FROM superstore.superstore
+GROUP BY Ship_mode
+ORDER BY Avg_Shipping_Days ASC
+
+-- G.3 Shipping Speed Vs Profit
+SELECT	Ship_mode
+	,	SUM(Profit) AS Total_Profit
+    ,	ROUND(AVG(DATEDIFF(Ship_date, Order_date)) ,2 ) AS Avg_Shipping_Days
+FROM superstore.superstore
+GROUP BY Ship_mode
+ORDER BY Total_Profit DESC
+
+-- G.4 Executive Summary 
+SELECT
+    Ship_Mode,
+    ROUND(SUM(Sales), 2)  AS Total_Sales,
+    ROUND(SUM(Profit), 2) AS Total_Profit,
+    ROUND(SUM(Profit) / NULLIF(SUM(Sales), 0) * 100, 2) AS Profit_Margin_Pct,
+    ROUND(AVG(DATEDIFF(Ship_Date, Order_Date)), 2) AS Avg_Shipping_Days,
+    CASE
+        WHEN ROUND(SUM(Profit) / NULLIF(SUM(Sales), 0) * 100, 2) < 5
+            THEN 'Low Margin – Review Costs'
+        WHEN ROUND(AVG(DATEDIFF(Ship_Date, Order_Date)), 2) <= 2
+            THEN 'Fast Delivery – High Cost Risk'
+        ELSE 'Balanced'
+    END AS Operational_Status
+FROM superstore.superstore
+GROUP BY Ship_Mode
+ORDER BY Profit_Margin_Pct DESC;
+
