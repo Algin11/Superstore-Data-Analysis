@@ -1,0 +1,66 @@
+-- E.1 Discount Bands Performance
+SELECT	
+	CASE
+		WHEN Discount = 0.0 THEN 'No Discount'
+		WHEN Discount >= 0.00 AND Discount <= 0.10 THEN '1-10%'
+        WHEN Discount > 0.10 AND Discount <= 0.20 THEN '11-20%'
+        WHEN Discount > 0.20 AND Discount <= 0.30 THEN '21-30%'
+        WHEN Discount > 0.30 AND Discount <= 0.40 THEN '31-40%'
+        WHEN Discount > 0.40 AND Discount <= 0.50 THEN '41-50%'
+        WHEN Discount > 0.50 AND Discount <= 0.60 THEN '51-60%'
+		WHEN Discount > 0.60 AND Discount <= 0.70 THEN '61-70%'
+        WHEN Discount > 0.70 AND Discount <= 0.80 THEN '71-80%'
+        WHEN Discount > 0.80 AND Discount <= 0.90 THEN '81-90%'
+        WHEN Discount > 0.90 AND Discount <= 1.00 THEN '91-100%'
+        END AS  Discount_Band
+,	COUNT( DISTINCT Order_id) AS Total_Orders
+,	SUM(Quantity) AS Total_Quantity
+,	SUM(Sales) AS Total_Sales
+,	SUM(Profit) AS Total_Profit
+,	ROUND( SUM(Profit) / SUM(Sales) * 100,2) AS Profit_Margin
+FROM superstore.superstore
+GROUP BY Discount_Band
+ORDER BY CASE Discount_Band
+				WHEN 'No Discount' THEN 1
+                WHEN '1-10%' THEN 2
+                WHEN '11-20%' THEN 3
+                WHEN '21-30%' THEN 4
+                WHEN '31-40%' THEN 5
+                WHEN '41-50%' THEN 6
+                WHEN '51-60%' THEN 7
+                WHEN '61-70%' THEN 8
+                WHEN '71-80%' THEN 9 
+                WHEN '81-90%' THEN 10
+                WHEN '91-100%' THEN 11 
+                END 
+-- E.2 Disocunt Vs Profit ( Scatter
+SELECT
+    Discount,
+    ROUND(SUM(Quantity), 0) AS Total_Quantity,
+    ROUND(SUM(Sales), 2)    AS Total_Sales,
+    ROUND(SUM(Profit), 2)   AS Total_Profit
+FROM superstore.superstore
+GROUP BY Discount
+ORDER BY Discount;
+
+-- E.3 Discount Level Turning Negative 
+SELECT	Discount
+	,	SUM(Sales) AS Total_Sales
+	,	SUM(Profit) AS Total_Profit
+FROM superstore.superstore
+GROUP BY Discount
+HAVING SUM(Profit) < 0
+ORDER BY Discount
+
+-- E.4 4. EXECUTIVE SUMMARY (DECISION-READY)
+SELECT	CASE
+			WHEN Discount <= 0.20 THEN '0-20%'
+            ELSE 'above 20%'
+            END AS Discount_Level
+	,	SUM(Quantity) AS Total_Quantity
+    ,	SUM(Sales) AS Total_Sales
+    ,	SUM(Profit) AS Total_Profit
+    ,	ROUND( SUM(Profit) / SUM(Sales) * 100 ,2 ) AS Profit_Margin
+FROM superstore.superstore
+GROUP BY Discount_Level
+ORDER BY Discount_Level
