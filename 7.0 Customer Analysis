@@ -1,4 +1,4 @@
--- G.1 CUSTOMER VALUE & LOYALTY ANALYSIS
+-- F.1 CUSTOMER VALUE & LOYALTY ANALYSIS
 WITH Customer AS (
 	SELECT	Customer_id
 		,	COUNT(DISTINCT Order_id) AS Order_count
@@ -13,3 +13,42 @@ SELECT	CASE
 	,	COUNT(*) AS Number_of_customer
 FROM Customer
 GROUP BY Customer_Type
+
+-- F.2 Top 10 Customers by Profit
+SELECT	Customer_id
+	,	Customer_name
+    ,	ROUND(SUM(Sales),2) AS Total_Sales
+    ,	ROUND(SUM(Profit),2) AS Total_Profit
+FROM superstore.superstore
+GROUP BY Customer_id, Customer_name
+ORDER BY Total_Profit DESC
+LIMIT 10
+
+-- F.3 Customer Lifetime Value
+SELECT	Customer_id
+	,	Customer_name
+    ,	COUNT(DISTINCT Order_id) AS Total_Order 
+    ,	ROUND(SUM(Sales),2) AS Lifetime_Sales
+    ,	ROUND(SUM(Profit),2) AS Lifetime_Profit
+FROM superstore.superstore
+GROUP BY Customer_id , Customer_name
+ORDER BY Lifetime_Profit DESC
+
+F.4 TOP 15% CUSTOMER PROFIT CONTRIBUTION
+WITH Customer_Profit AS (
+	SELECT	Customer_id
+		,	SUM(Profit) AS Total_Profit
+	FROM superstore.superstore
+    GROUP BY Customer_id
+    )
+,	Ranked_Customer AS (
+	SELECT	*
+		,	NTILE(100) OVER( ORDER BY Total_Profit DESC) AS Profit_Percentile
+	FROM Customer_Profit
+    )
+
+SELECT	ROUND( SUM( CASE WHEN Profit_Percentile <= 15 THEN Total_Profit 
+						 ELSE 0
+                         END  ) / SUM(Total_Profit) * 100 ,2 ) AS Top_15_Percent_Profit_Contribution
+FROM Ranked_Customer
+
