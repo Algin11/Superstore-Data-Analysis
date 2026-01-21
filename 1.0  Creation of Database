@@ -1,0 +1,39 @@
+-- Create Database For Data Manipulation( Creating a database for data manipulation)
+CREATE DATABASE IF NOT EXISTS superstore;
+
+-- Creating the Table supertore (Creating table for table manipulation)
+USE superstore;
+
+CREATE TABLE superstore (
+	Row_ID INT
+,	Order_id VARCHAR(250)
+,	Order_date VARCHAR(250) 
+,	Ship_date VARCHAR(250)
+,	Ship_mode VARCHAR(250)
+,	Customer_id	VARCHAR(250)
+,	Customer_name VARCHAR(250)
+,	Segment VARCHAR(250)
+,	Country VARCHAR(250)
+,	City VARCHAR(250)
+,	State VARCHAR(250)
+,	Postal_code INT 
+,	Region VARCHAR(250)
+,	Product_id VARCHAR(250)
+,	Category VARCHAR(250)
+,	Sub_category VARCHAR(250)
+,	Product_name VARCHAR(250)
+, 	Sales DECIMAL(10,2)
+,	Quantity INT
+,	Discount DECIMAL(10,2)
+,	Profit DECIMAL(10,2)
+ )
+
+
+-- Inserting the Data Into The Table( Inserting the data to the created table)
+LOAD DATA INFILE
+'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Superstore.csv'
+INTO TABLE superstore
+FIELDS TERMINATED BY ','
+OPTIONALLY ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES
