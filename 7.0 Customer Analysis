@@ -1,0 +1,15 @@
+-- G.1 CUSTOMER VALUE & LOYALTY ANALYSIS
+WITH Customer AS (
+	SELECT	Customer_id
+		,	COUNT(DISTINCT Order_id) AS Order_count
+	FROM superstore.superstore
+    GROUP BY Customer_id
+    )
+    
+SELECT	CASE
+			WHEN Order_count = 1 THEN 'One time payment'
+            ELSE 'Repeat Customer'
+            END AS Customer_Type
+	,	COUNT(*) AS Number_of_customer
+FROM Customer
+GROUP BY Customer_Type
