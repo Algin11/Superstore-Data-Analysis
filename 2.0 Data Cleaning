@@ -1,0 +1,85 @@
+-- A. Data Cleaning
+--  A.1 Checking For Duplicates
+SELECT *
+FROM superstore.superstore
+GROUP BY  Row_ID 
+,	Order_id 
+,	Order_date  
+,	Ship_date 
+,	Ship_mode 
+,	Customer_id	
+,	Customer_name 
+,	Segment 
+,	Country 
+,	City 
+,	State 
+,	Postal_code 
+,	Region 
+,	Product_id 
+,	Category 
+,	Sub_category 
+,	Product_name 
+, 	Sales 
+,	Quantity 
+,	Discount 
+,	Profit 
+HAVING COUNT(*) > 1
+
+-- A.2 Checking For Nulls
+SELECT *
+FROM superstore.superstore
+WHERE  Row_ID IS NULL
+OR	Order_id IS NULL
+OR	Order_date  IS NULL
+OR	Ship_date IS NULL
+OR	Ship_mode IS NULL
+OR	Customer_id	IS NULL
+OR	Customer_name IS NULL
+OR	Segment IS NULL
+OR	Country IS NULL
+OR	City IS NULL
+OR	State IS NULL
+OR	Postal_code IS NULL
+OR	Region IS NULL
+OR	Product_id IS NULL
+OR	Category IS NULL
+OR	Sub_category IS NULL
+OR	Product_name IS NULL
+OR	Sales IS NULL
+OR	Quantity IS NULL
+OR	Discount IS NULL
+OR	Profit IS NULL
+
+-- A.3 Setting the SQL Safe Updates Onn
+SET SQL_SAFE_UPDATES = 0;
+
+
+-- A.4 Changing The Date Format
+UPDATE superstore.superstore
+SET
+    Order_date = STR_TO_DATE(Order_date, '%m/%e/%Y'),
+    Ship_date  = STR_TO_DATE(Ship_date,  '%m/%e/%Y');
+    
+ALTER TABLE superstore.superstore
+	MODIFY COLUMN Order_date date 
+,	MODIFY COLUMN Ship_date date
+
+
+-- A.5 Standardizing The Customer_name
+
+SELECT *
+FROM superstore.superstore
+WHERE LENGTH (Postal_code) > 5
+
+
+-- A.6 Checking For Outliers
+SELECT *
+FROM superstore.superstore
+WHERE Sales <= 0
+
+SELECT *
+FROM superstore.superstore
+WHERE Discount >= 2 OR Discount < 0
+
+-- A.7 Setting the SQL Safe Updates Off
+SET SQL_SAFE_UPDATES = 1;
