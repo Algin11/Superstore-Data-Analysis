@@ -1,0 +1,10 @@
+SELECT 	YEAR(Order_date) AS Year
+	,	SUM(Sales) AS Total_Sales
+    ,	SUM(Profit) AS Total_Profit
+    ,	ROUND(SUM(Profit) / SUM(Sales) * 100 ,2) AS Profit_Margin
+    ,	SUM(Quantity) AS Total_Orders
+    ,	ROUND(SUM(Sales) / SUM(Quantity) ,2) AS Average_Order_Value
+    ,	ROUND(AVG(Discount),2) AS Average_Discount
+FROM superstore.superstore
+GROUP BY YEAR(Order_date)
+ORDER BY YEAR(Order_date) DESC
