@@ -1,0 +1,78 @@
+-- F.1 Region Level Analysis
+SELECT	Region
+	,	SUM(Sales) AS Total_Sales
+    ,	SUM(Profit) AS Total_Profit
+    ,	ROUND( SUM(Profit) /  SUM(Sales) *100 ,2) AS Profit_Margin_Pct
+FROM superstore.superstore
+GROUP BY Region
+ORDER BY Total_Profit DESC
+
+-- F2. State Level Analysis
+SELECT	State
+	,	SUM(Sales) AS Total_Sales
+    ,	SUM(Profit) AS Total_Profit
+    ,	ROUND( SUM(Profit) /  SUM(Sales) *100 ,2) AS Profit_Margin_Pct
+FROM superstore.superstore
+GROUP BY State
+ORDER BY Total_Sales DESC
+
+-- F.3 High Sales But Low Making Profit 
+SELECT	State
+	,	SUM(Sales) AS Total_Sales
+    ,	SUM(Profit) AS Total_Profit
+    ,	ROUND( SUM(Profit) /  SUM(Sales) *100 ,2) AS Profit_Margin_Pct
+FROM superstore.superstore
+GROUP BY State
+HAVING SUM(Sales) > 50000 AND SUM(Profit) < 0
+ORDER BY Total_Sales DESC
+
+-- F.4 City Level Performance
+SELECT	City
+	,	State
+	,	SUM(Sales) AS Total_Sales
+    ,	SUM(Profit) AS Total_Profit
+    ,	ROUND( SUM(Profit) /  SUM(Sales) *100 ,2) AS Profit_Margin_Pct
+FROM superstore.superstore
+GROUP BY City, State
+ORDER BY Total_Sales DESC
+
+-- F.5 Loss Making Cities
+SELECT	City
+	,	State
+	,	SUM(Sales) AS Total_Sales
+    ,	SUM(Profit) AS Total_Profit
+    ,	ROUND( SUM(Profit) /  SUM(Sales) *100 ,2) AS Profit_Margin_Pct
+FROM superstore.superstore
+GROUP BY City, State
+HAVING SUM(Profit) < 0
+ORDER BY Total_Sales DESC
+
+-- F.6 Executive Summary
+WITH geo_profit AS (
+    SELECT
+        CONCAT(State, ' - ', City) AS Geography,
+        SUM(Profit) AS Total_Profit
+    FROM superstore.superstore
+    GROUP BY State, City
+)
+SELECT
+    ROUND(
+        SUM(CASE WHEN Total_Profit < 0 THEN 1 ELSE 0 END)
+        / COUNT(*) * 100,
+        2
+    ) AS Percentage_Loss_Making_Geographies
+FROM geo_profit;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
