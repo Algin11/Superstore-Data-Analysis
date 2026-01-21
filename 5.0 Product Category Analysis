@@ -1,8 +1,85 @@
-SELECT
-    Category,
-    ROUND(SUM(Sales), 2)  AS Total_Sales,
-    ROUND(SUM(Profit), 2) AS Total_Profit,
-    ROUND(SUM(Profit) / NULLIF(SUM(Sales), 0) * 100, 2) AS Profit_Margin_Pct
+-- D Product Performance Analysis ( This will show the perfomance per category)
+-- D.1 Total Sales and Profit by Category 
+SELECT 	Category
+	,	SUM(Sales) AS Total_Sales
+    ,	SUM(Profit) AS Total_Profit
+    ,	ROUND(SUM(Profit) / NULLIF(SUM(SALES),0) * 100 , 2) AS Profit_Margin_Percent
 FROM superstore.superstore
 GROUP BY Category
-ORDER BY Total_Profit DESC;
+
+-- C.2 Yearly Sales and Profit by Category 
+SELECT 
+		Category
+	,	SUM(Sales) AS Total_Sales
+    ,	SUM(Profit) AS Total_Profit
+    ,	ROUND(SUM(Profit) / NULLIF(SUM(SALES),0) * 100 , 2) AS Profit_Margin_Percent
+FROM superstore.superstore
+GROUP BY Category
+ORDER BY  Total_Profit DESC
+
+-- D.3 Yearly Sale and Profit by Sub Category
+SELECT 
+		Category
+    ,	Sub_category
+	,	SUM(Sales) AS Total_Sales
+    ,	SUM(Profit) AS Total_Profit
+    ,	ROUND(SUM(Profit) / NULLIF(SUM(SALES),0) * 100 , 2) AS Profit_Margin_Percent
+FROM superstore.superstore
+GROUP BY Category, Sub_category
+ORDER BY   Total_Profit DESC , Category ASC
+
+-- D.4 LOSS-MAKING SUB-CATEGORIES (RISK FOCUS)
+SELECT	Product_Name
+	,	SUM(Quantity) AS Total_Quantity_Sold
+    ,	SUM(Sales) AS Total_Sales
+    ,	SUM(Profit) AS Total_Profit
+FROM superstore.superstore
+GROUP BY Product_Name
+HAVING SUM(Quantity) > 50 AND SUM(Profit) < 0
+ORDER BY Total_Profit ASC
+
+-- D.5 PRODUCT-LEVEL PERFORMANCE( Top 10)
+SELECT
+    Product_ID,
+    Product_Name,
+    SUM(Quantity) AS Total_Quantity,
+    ROUND(SUM(Sales), 2)  AS Total_Sales,
+    ROUND(SUM(Profit), 2) AS Total_Profit
+FROM superstore.superstore
+GROUP BY Product_ID, Product_Name
+ORDER BY Total_Profit DESC
+LIMIT 10
+
+-- D.6 Products that sells a lot but losses money.
+SELECT	Product_Name
+	,	SUM(Quantity) AS Total_Quantity_Sold
+    ,	SUM(Sales) AS Total_Sales
+    ,	SUM(Profit) AS Total_Profit
+FROM superstore.superstore
+GROUP BY Product_Name
+HAVING SUM(Quantity) > 50 AND SUM(Profit) < 0
+ORDER BY Total_Profit ASC
+
+-- D.7 Product Performance Classifications( Star/ Loss Maker)
+SELECT	Product_name
+	,	SUM(Sales) AS Total_Sales
+    ,	SUM(Profit) AS Total_Profit
+	,	CASE
+			WHEN SUM(Profit) > 0 AND SUM(Sales) >= 10000 THEN 'Star Product'
+			WHEN SUM(Profit) < 0 AND SUM(Sales) >= 10000 THEN 'High Sales, Low Profit'
+			WHEN SUM(Profit) < 0 THEN ' Loss Maker'
+        ELSE 'Average Performer'
+	END AS Product_Status
+FROM superstore.superstore
+GROUP BY Product_Name
+ORDER BY Product_Name ASC
+
+
+
+
+
+
+
+
+
+
