@@ -1,3 +1,4 @@
+-- C.1 Yearly Performance 
 SELECT 	YEAR(Order_date) AS Year
 	,	SUM(Sales) AS Total_Sales
     ,	SUM(Profit) AS Total_Profit
@@ -8,3 +9,21 @@ SELECT 	YEAR(Order_date) AS Year
 FROM superstore.superstore
 GROUP BY YEAR(Order_date)
 ORDER BY YEAR(Order_date) DESC
+
+-- C.2 Monthly Sales And Profit 
+SELECT	DATE_FORMAT(Order_date, '%y-%m') AS Month
+	,	SUM(Sales) AS Total_Sales
+    ,	SUM(Profit) AS Total_Profit
+    ,	ROUND(SUM(Profit) / SUM(Sales) * 100 ,2) AS Profit_Margin
+FROM superstore.superstore
+GROUP BY Month
+ORDER BY Month ASC
+
+-- C.3 Quarterly Sales And Profit (This will show the quarterly performance )
+SELECT	YEAR(Order_Date) AS Year
+	,	Quarter(Order_Date) AS Quarter
+	,	SUM(Sales)  AS Total_Sales
+	,	SUM(Profit) AS Total_Profit
+FROM superstore.superstore
+GROUP BY Year,	Quarter
+ORDER BY Year,	Quarter
