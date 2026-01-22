@@ -1,8 +1,62 @@
-
+-- Core Business KPIs
 SELECT
-    ROUND(SUM(Sales), 2) AS total_sales,
-    ROUND(SUM(Profit), 2) AS total_profit,
-    ROUND(SUM(Profit) / SUM(Sales) * 100, 2) AS profit_margin_percent,
-    COUNT(DISTINCT Order_ID) AS total_orders,
-    ROUND(SUM(Sales) / COUNT(DISTINCT Order_ID), 2) AS avg_order_value
-FROM superstore;
+    ROUND(SUM(Sales), 2)                                    AS Total_Sales,
+    ROUND(SUM(Profit), 2)                                   AS Total_Profit,
+    ROUND(SUM(Profit) / SUM(Sales) * 100, 2)                AS Profit_Margin_Pct,
+    COUNT(DISTINCT Order_ID)                                AS Total_Orders,
+    ROUND(SUM(Sales) / COUNT(DISTINCT Order_ID), 2)         AS Average_Order_Value,
+    ROUND(AVG(Discount) * 100, 2)                            AS Avg_Discount_Pct
+FROM superstore.superstore
+
+-- KPI Trend Montyly 
+SELECT
+    DATE_FORMAT(Order_Date, '%Y-%m')                        AS Order_Month,
+    ROUND(SUM(Sales), 2)                                    AS Monthly_Sales,
+    ROUND(SUM(Profit), 2)                                   AS Monthly_Profit,
+    ROUND(SUM(Profit) / SUM(Sales) * 100, 2)                AS Profit_Margin_Pct
+FROM superstore.superstore
+GROUP BY Order_Month
+ORDER BY Order_Month
+
+-- Discount Band Analysis
+SELECT
+    CASE
+        WHEN Discount = 0 THEN 'No Discount'
+        WHEN Discount > 0 AND Discount <= 0.10 THEN '1–10%'
+        WHEN Discount > 0.10 AND Discount <= 0.20 THEN '11–20%'
+        WHEN Discount > 0.20 AND Discount <= 0.30 THEN '21–30%'
+        ELSE '30%+'
+    END                                                     AS Discount_Band,
+    COUNT(DISTINCT Order_ID)                                AS Orders,
+    ROUND(SUM(Sales), 2)                                    AS Total_Sales,
+    ROUND(SUM(Profit), 2)                                   AS Total_Profit,
+    ROUND(SUM(Profit) / SUM(Sales) * 100, 2)                AS Profit_Margin_Pct
+FROM superstore.superstore
+GROUP BY Discount_Band
+ORDER BY MIN(Discount)
+
+-- Negative Discount Profit from Discount
+SELECT
+    COUNT(DISTINCT Order_ID)                                AS Loss_Making_Orders,
+    ROUND(SUM(Sales), 2)                                    AS Loss_Sales,
+    ROUND(SUM(Profit), 2)                                   AS Loss_Profit
+FROM superstore.superstore
+WHERE Profit < 0
+
+--
+WITH risk AS (
+	SELECT	CASE
+			WHEN Discount <= 0.20 THEN 'Safe Discount (≤20%)'
+            ELSE  'High Risk Discount (>20%)'
+            END AS Discount_Risk 
+		,	Discount
+        ,	Profit
+        ,	Order_id
+	FROM superstore.superstore )
+    
+SELECT	Discount_Risk
+	,	ROUND( AVG(Discount) *100 ,2) AS Avg_Discount_PCT
+    ,	COUNT( DISTINCT Order_id ) AS Total_Orders
+    ,	ROUND( SUM(Profit) ,2) AS Total_Profit
+FROM risk
+GROUP BY Discount_Risk
