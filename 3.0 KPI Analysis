@@ -43,7 +43,7 @@ SELECT
 FROM superstore.superstore
 WHERE Profit < 0
 
---
+--	Discount Threshold Risk
 WITH risk AS (
 	SELECT	CASE
 			WHEN Discount <= 0.20 THEN 'Safe Discount (≤20%)'
