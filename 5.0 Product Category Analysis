@@ -40,13 +40,14 @@ ORDER BY Total_Profit ASC
 
 -- D.5 PRODUCT-LEVEL PERFORMANCE( Top 10)
 SELECT
-    Product_ID,
-    Product_Name,
-    SUM(Quantity) AS Total_Quantity,
-    ROUND(SUM(Sales), 2)  AS Total_Sales,
-    ROUND(SUM(Profit), 2) AS Total_Profit
+	 Category
+,    Product_ID
+,    Product_Name
+,    SUM(Quantity) AS Total_Quantity
+,    ROUND(SUM(Sales), 2)  AS Total_Sales
+,    ROUND(SUM(Profit), 2) AS Total_Profit
 FROM superstore.superstore
-GROUP BY Product_ID, Product_Name
+GROUP BY Category,Product_ID, Product_Name
 ORDER BY Total_Profit DESC
 LIMIT 10
 
