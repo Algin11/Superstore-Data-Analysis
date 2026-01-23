@@ -29,12 +29,12 @@ GROUP BY Category, Sub_category
 ORDER BY   Total_Profit DESC , Category ASC
 
 -- D.4 LOSS-MAKING SUB-CATEGORIES (RISK FOCUS)
-SELECT	Product_Name
+SELECT	Sub_category
 	,	SUM(Quantity) AS Total_Quantity_Sold
     ,	SUM(Sales) AS Total_Sales
     ,	SUM(Profit) AS Total_Profit
 FROM superstore.superstore
-GROUP BY Product_Name
+GROUP BY Sub_category
 HAVING SUM(Quantity) > 50 AND SUM(Profit) < 0
 ORDER BY Total_Profit ASC
 
