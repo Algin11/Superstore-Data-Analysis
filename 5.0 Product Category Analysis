@@ -75,6 +75,16 @@ FROM superstore.superstore
 GROUP BY Product_Name
 ORDER BY Product_Name ASC
 
+-- D.8 Sub Category Negative Generrating Profits
+WITH sub_prof AS (
+SELECT	Sub_category
+	,	SUM(Profit) AS Total_Profit
+FROM superstore.superstore
+GROUP BY Sub_category )
+
+SELECT	ROUND( COUNT( CASE WHEN Total_Profit < 0 THEN 1  END) / COUNT(*) * 100 , 0) AS Profit_Losses_PCT
+FROM sub_prof 
+
 
 
 
