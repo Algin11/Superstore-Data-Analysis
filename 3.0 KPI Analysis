@@ -1,4 +1,8 @@
--- Core Business KPIs
+-- Number of Rows
+SELECT COUNT(*)
+FROM superstore.superstore
+
+-- Core Business KPI
 SELECT
     ROUND(SUM(Sales), 2)                                    AS Total_Sales
 ,	ROUND(SUM(Profit), 2)                                   AS Total_Profit
