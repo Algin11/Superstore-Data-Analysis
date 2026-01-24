@@ -31,7 +31,7 @@ SELECT
         WHEN Discount > 0.20 AND Discount <= 0.30 THEN '21–30%'
         ELSE '30%+'
     END                                                     AS Discount_Band
-    COUNT(DISTINCT Order_ID)                                AS Orders
+,   COUNT(DISTINCT Order_ID)                                AS Orders
 ,   ROUND(SUM(Sales), 2)                                    AS Total_Sales
 ,   ROUND(SUM(Profit), 2)                                   AS Total_Profit
 ,   ROUND(SUM(Profit) / SUM(Sales) * 100, 2)                AS Profit_Margin_Pct
