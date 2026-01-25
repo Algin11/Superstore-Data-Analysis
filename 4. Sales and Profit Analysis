@@ -15,6 +15,7 @@ SELECT	DATE_FORMAT(Order_date, '%y-%m') AS Month
 	,	SUM(Sales) AS Total_Sales
     ,	SUM(Profit) AS Total_Profit
     ,	ROUND(SUM(Profit) / SUM(Sales) * 100 ,2) AS Profit_Margin
+	,	ROUND(AVG(Discount),2) AS Average_Discount
 FROM superstore.superstore
 GROUP BY Month
 ORDER BY Month ASC
@@ -24,6 +25,7 @@ SELECT	YEAR(Order_Date) AS Year
 	,	Quarter(Order_Date) AS Quarter
 	,	SUM(Sales)  AS Total_Sales
 	,	SUM(Profit) AS Total_Profit
+	,	ROUND(AVG(Discount),2) AS Average_Discount
 FROM superstore.superstore
 GROUP BY Year,	Quarter
 ORDER BY Year,	Quarter
