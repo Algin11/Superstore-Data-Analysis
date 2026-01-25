@@ -18,15 +18,14 @@ GROUP BY Category
 ORDER BY  Total_Profit DESC
 
 -- D.3 Yearly Sale and Profit by Sub Category
-SELECT 
-		Category
-    ,	Sub_category
+SELECT 	
+    	Sub_category
 	,	SUM(Sales) AS Total_Sales
     ,	SUM(Profit) AS Total_Profit
     ,	ROUND(SUM(Profit) / NULLIF(SUM(SALES),0) * 100 , 2) AS Profit_Margin_Percent
 FROM superstore.superstore
-GROUP BY Category, Sub_category
-ORDER BY   Total_Profit DESC , Category ASC
+GROUP BY Sub_category
+ORDER BY   Total_Profit DESC 
 
 -- D.4 LOSS-MAKING SUB-CATEGORIES (RISK FOCUS)
 SELECT	Sub_category
