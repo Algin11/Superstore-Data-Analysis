@@ -65,11 +65,15 @@ ALTER TABLE superstore.superstore
 ,	MODIFY COLUMN Ship_date date
 
 
--- A.5 Standardizing The Customer_name
+-- A.5 Standardizing The Data Set
 
 SELECT *
 FROM superstore.superstore
 WHERE LENGTH (Postal_code) > 5
+
+UPDATE superstore.superstore
+SET product_name = CONCAT('"', REPLACE(product_name, '"', '""'), '"');
+
 
 
 -- A.6 Checking For Outliers
