@@ -71,11 +71,6 @@ SELECT *
 FROM superstore.superstore
 WHERE LENGTH (Postal_code) > 5
 
-UPDATE superstore.superstore
-SET product_name = CONCAT('"', REPLACE(product_name, '"', '""'), '"');
-
-
-
 -- A.6 Checking For Outliers
 SELECT *
 FROM superstore.superstore
@@ -87,3 +82,36 @@ WHERE Discount >= 2 OR Discount < 0
 
 -- A.7 Setting the SQL Safe Updates Off
 SET SQL_SAFE_UPDATES = 1;
+
+-- A.8 Uploading the cleaned Data for tableau manipulation
+SELECT 'Row_ID', 'Order_id', 'Order_date', 'Ship_date', 'Ship_mode', 
+       'Customer_id', 'Customer_name', 'Segment', 'Country', 'City', 
+       'State', 'Postal_code', 'Region', 'Product_id', 'Category', 
+       'Sub_category', 'Product_name', 'Sales', 'Quantity', 'Discount', 'Profit'
+UNION ALL
+SELECT 
+    Row_ID,
+    Order_id,
+    Order_date,
+    Ship_date,
+    Ship_mode,
+    Customer_id,
+    Customer_name,
+    Segment,
+    Country,
+    City,
+    State,
+    Postal_code,
+    Region,
+    Product_id,
+    Category,
+    Sub_category,
+    CONCAT('"', REPLACE(REPLACE(product_name, '"', '""'), '\n', ' '), '"') AS product_name,
+    Sales,
+    Quantity,
+    Discount,
+    Profit
+FROM superstore.superstore
+INTO OUTFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/Superstore_cleaned.csv'
+FIELDS TERMINATED BY ',' 
+LINES TERMINATED BY '\n';
